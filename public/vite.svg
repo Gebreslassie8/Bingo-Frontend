@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#EC489A"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" fill="url(#grad)" rx="40"/>
+  <text x="100" y="70" text-anchor="middle" fill="white" font-size="28" font-weight="bold">B</text>
+  <text x="100" y="100" text-anchor="middle" fill="white" font-size="28" font-weight="bold">I</text>
+  <text x="100" y="130" text-anchor="middle" fill="white" font-size="28" font-weight="bold">N</text>
+  <text x="100" y="160" text-anchor="middle" fill="white" font-size="28" font-weight="bold">G</text>
+  <text x="100" y="190" text-anchor="middle" fill="white" font-size="28" font-weight="bold">O</text>
+  <text x="100" y="220" text-anchor="middle" fill="white" font-size="14" font-weight="bold">BUSINESS</text>
+</svg>
