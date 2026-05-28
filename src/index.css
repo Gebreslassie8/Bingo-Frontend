@@ -7,7 +7,7 @@
     @apply m-0 p-0 box-border;
   }
 
-  /* Fix for full height scrolling */
+  /* Make the root element fill the viewport */
   html,
   body,
   #root {
@@ -16,17 +16,14 @@
     padding: 0;
   }
 
-  body {
-    @apply font-sans antialiased;
-    overflow: hidden;
-    /* Prevents double scrollbars */
-  }
-
-  /* Ensure root takes full height */
   #root {
     display: flex;
     flex-direction: column;
-    height: 100%;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    /* overflow: hidden is removed – let the layout decide scrolling */
   }
 }
 
@@ -62,7 +59,7 @@
   }
 }
 
-/* Animations */
+/* Animations (keep all your existing animations) */
 @keyframes slideDown {
   from {
     transform: translateY(-100%);
@@ -129,6 +126,10 @@
   }
 }
 
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
 @keyframes shake {
 
   0%,
@@ -152,6 +153,10 @@
   }
 }
 
+.animate-shake {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -166,14 +171,6 @@
 
 .animate-fade-in {
   animation: fade-in 0.5s ease-out;
-}
-
-.animate-blob {
-  animation: blob 7s infinite;
-}
-
-.animate-shake {
-  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 .animation-delay-2000 {

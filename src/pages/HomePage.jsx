@@ -2,21 +2,9 @@ import React from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-    Target,
-    Gift,
-    Users,
-    Trophy,
-    Zap,
-    Shield,
-    Star,
-    ArrowRight,
-    CheckCircle,
-    Award,
-    Clock,
-    CreditCard,
-    Smartphone,
-    Sparkles,
-    Crown
+    Target, Gift, Users, Trophy, Zap, Shield,
+    Star, ArrowRight, CheckCircle, Award, Clock,
+    CreditCard, Smartphone, Sparkles, Crown
 } from 'lucide-react';
 
 // Fade-up animation helper
@@ -35,11 +23,11 @@ const staggerContainer = {
 
 const Homepage = () => {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-
+        // No min-h-screen – parent layout controls full height
+        <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
             {/* Hero Section */}
             <section className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
-                {/* Animated background shapes */}
+                {/* Animated background shapes (unchanged) */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <motion.div
                         animate={{ x: [0, 100, 0], y: [0, -50, 0] }}

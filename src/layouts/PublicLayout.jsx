@@ -1,18 +1,18 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
-import Footer from './Footer';
 
 const PublicLayout = () => {
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900">
+        // Fill parent (#root) height, column flex
+        <div className="flex flex-col h-full bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900">
             <Navbar />
 
-            <main className="flex-1">
-
+            {/* Scrollable content area – pushes footer down naturally */}
+            <main className="flex-1 overflow-y-auto">
                 <Outlet />
-                <Footer />
             </main>
+
         </div>
     );
 };

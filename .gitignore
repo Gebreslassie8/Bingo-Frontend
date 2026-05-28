@@ -37,3 +37,7 @@ git push -u origin main
 git remote add origin https://github.com/Gebreslassie8/Bingo-Frontend.git
 git branch -M main
 git push -u origin main
+
+git add .
+git commit -m "Upload Bingo project source code"
+git push
