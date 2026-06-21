@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import {
     Target, Gift, Users, Trophy, Zap, Shield,
     Star, ArrowRight, CheckCircle, Award, Clock,
-    CreditCard, Smartphone, Sparkles, Crown
+    CreditCard, Smartphone, Sparkles, Crown, Gamepad2
 } from 'lucide-react';
 
 // Fade-up animation helper
@@ -23,21 +23,25 @@ const staggerContainer = {
 
 const Homepage = () => {
     return (
-        // No min-h-screen – parent layout controls full height
-        <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <div className="bg-gradient-to-br from-slate-900 via-teal-950/30 to-slate-900">
             {/* Hero Section */}
             <section className="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
-                {/* Animated background shapes (unchanged) */}
+                {/* Animated background shapes - Teal/Cyan theme */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <motion.div
                         animate={{ x: [0, 100, 0], y: [0, -50, 0] }}
                         transition={{ repeat: Infinity, duration: 20, ease: 'linear' }}
-                        className="absolute top-20 left-10 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"
+                        className="absolute top-20 left-10 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl"
                     />
                     <motion.div
                         animate={{ x: [0, -80, 0], y: [0, 60, 0] }}
                         transition={{ repeat: Infinity, duration: 25, ease: 'linear' }}
-                        className="absolute bottom-20 right-10 w-80 h-80 bg-pink-500/20 rounded-full blur-3xl"
+                        className="absolute bottom-20 right-10 w-80 h-80 bg-cyan-500/20 rounded-full blur-3xl"
+                    />
+                    <motion.div
+                        animate={{ x: [0, 50, 0], y: [0, 80, 0] }}
+                        transition={{ repeat: Infinity, duration: 18, ease: 'linear' }}
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"
                     />
                 </div>
 
@@ -47,17 +51,17 @@ const Homepage = () => {
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5 }}
-                            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6"
+                            className="inline-flex items-center gap-2 bg-teal-500/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-teal-500/20"
                         >
-                            <Sparkles className="w-4 h-4 text-yellow-400" />
-                            <span className="text-sm font-medium text-white/90">New Game Mode Released!</span>
+                            <Sparkles className="w-4 h-4 text-teal-400" />
+                            <span className="text-sm font-medium text-teal-300">New Game Mode Released!</span>
                         </motion.div>
 
                         <motion.h1
                             variants={fadeUp}
                             initial="hidden"
                             animate="visible"
-                            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 bg-clip-text text-transparent"
+                            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent"
                         >
                             Play Bingo, Earn Real Rewards
                         </motion.h1>
@@ -81,18 +85,18 @@ const Homepage = () => {
                         >
                             <Link to="/register">
                                 <motion.button
-                                    whileHover={{ scale: 1.05 }}
+                                    whileHover={{ scale: 1.05, boxShadow: '0 10px 30px -5px rgba(20, 184, 166, 0.4)' }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold shadow-lg flex items-center gap-2 text-lg"
+                                    className="px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl font-semibold shadow-lg shadow-teal-500/25 flex items-center gap-2 text-lg hover:shadow-teal-500/40 transition-all duration-300"
                                 >
                                     Get Started <ArrowRight className="w-5 h-5" />
                                 </motion.button>
                             </Link>
                             <Link to="/how-to-play">
                                 <motion.button
-                                    whileHover={{ scale: 1.05 }}
+                                    whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)' }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl font-semibold hover:bg-white/20 transition"
+                                    className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl font-semibold hover:bg-white/20 transition-all duration-300"
                                 >
                                     How It Works
                                 </motion.button>
@@ -107,9 +111,9 @@ const Homepage = () => {
                             transition={{ delay: 0.3 }}
                             className="mt-12 flex flex-wrap justify-center gap-6 text-slate-400"
                         >
-                            <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-400" /> 100% Secure</div>
-                            <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-400" /> Instant Withdrawals</div>
-                            <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-400" /> 24/7 Support</div>
+                            <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-teal-400" /> 100% Secure</div>
+                            <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-teal-400" /> Instant Withdrawals</div>
+                            <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-teal-400" /> 24/7 Support</div>
                         </motion.div>
                     </div>
                 </div>
@@ -145,9 +149,9 @@ const Homepage = () => {
                             <motion.div
                                 key={i}
                                 variants={fadeUp}
-                                className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-purple-500/50 transition-all hover:shadow-xl"
+                                className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-teal-500/10 hover:border-teal-500/40 transition-all hover:shadow-xl hover:shadow-teal-500/5 group"
                             >
-                                <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4">
+                                <div className="w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-teal-500/20 group-hover:shadow-teal-500/40 transition-all duration-300">
                                     <feature.icon className="w-7 h-7 text-white" />
                                 </div>
                                 <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
@@ -177,8 +181,8 @@ const Homepage = () => {
                                     { step: '03', title: 'Join a Game', desc: 'Pick a bingo room and buy your cards' },
                                     { step: '04', title: 'Win & Withdraw', desc: 'Win prizes and withdraw instantly' }
                                 ].map((item, i) => (
-                                    <div key={i} className="flex gap-4">
-                                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-white shrink-0">
+                                    <div key={i} className="flex gap-4 group">
+                                        <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center font-bold text-white shrink-0 shadow-lg shadow-teal-500/20 group-hover:shadow-teal-500/40 transition-all duration-300">
                                             {item.step}
                                         </div>
                                         <div>
@@ -190,8 +194,9 @@ const Homepage = () => {
                             </div>
                             <Link to="/register">
                                 <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    className="mt-8 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold flex items-center gap-2"
+                                    whileHover={{ scale: 1.05, boxShadow: '0 10px 30px -5px rgba(20, 184, 166, 0.4)' }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="mt-8 px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg font-semibold flex items-center gap-2 shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 transition-all duration-300"
                                 >
                                     Start Playing Now <ArrowRight className="w-4 h-4" />
                                 </motion.button>
@@ -205,11 +210,11 @@ const Homepage = () => {
                             transition={{ duration: 0.6 }}
                             className="relative"
                         >
-                            <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-3xl p-8 border border-white/10 backdrop-blur-sm">
+                            <div className="bg-gradient-to-br from-teal-500/20 to-cyan-500/20 rounded-3xl p-8 border border-teal-500/20 backdrop-blur-sm shadow-2xl shadow-teal-500/10">
                                 <div className="flex justify-center mb-6">
                                     <div className="grid grid-cols-3 gap-3">
                                         {[...Array(9)].map((_, i) => (
-                                            <div key={i} className="w-16 h-16 bg-white/5 rounded-lg flex items-center justify-center text-2xl font-bold text-yellow-400">
+                                            <div key={i} className="w-16 h-16 bg-slate-800/50 rounded-lg flex items-center justify-center text-2xl font-bold text-teal-400 border border-teal-500/20 shadow-lg shadow-teal-500/10">
                                                 {Math.floor(Math.random() * 90) + 1}
                                             </div>
                                         ))}
@@ -217,9 +222,9 @@ const Homepage = () => {
                                 </div>
                                 <div className="text-center">
                                     <p className="text-slate-300">Example bingo card – match numbers to win!</p>
-                                    <div className="mt-4 inline-flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-full">
-                                        <Trophy className="w-4 h-4 text-green-400" />
-                                        <span className="text-green-400 font-medium">Current Jackpot: 5,000 Credits</span>
+                                    <div className="mt-4 inline-flex items-center gap-2 bg-teal-500/20 px-4 py-2 rounded-full border border-teal-500/30">
+                                        <Trophy className="w-4 h-4 text-teal-400" />
+                                        <span className="text-teal-400 font-medium">Current Jackpot: 5,000 Credits</span>
                                     </div>
                                 </div>
                             </div>
@@ -256,35 +261,35 @@ const Homepage = () => {
                             <motion.div
                                 key={i}
                                 variants={fadeUp}
-                                className={`relative bg-white/10 backdrop-blur-sm rounded-2xl p-6 border transition-all hover:shadow-2xl ${plan.popular ? 'border-purple-500 shadow-lg shadow-purple-500/20 scale-105' : 'border-white/10'
+                                className={`relative bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border transition-all hover:shadow-2xl ${plan.popular ? 'border-teal-500 shadow-lg shadow-teal-500/20 scale-105' : 'border-white/10 hover:border-teal-500/30'
                                     }`}
                             >
                                 {plan.popular && (
-                                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg shadow-teal-500/30">
                                         MOST POPULAR
                                     </div>
                                 )}
                                 <div className="text-center mb-6">
                                     <h3 className="text-2xl font-bold text-white">{plan.name}</h3>
                                     <div className="mt-4">
-                                        <span className="text-4xl font-bold text-white">{plan.price}</span>
+                                        <span className="text-4xl font-bold text-teal-400">{plan.price}</span>
                                         {plan.price !== 'Free' && <span className="text-slate-400">/month</span>}
                                     </div>
-                                    <p className="text-sm text-purple-400 mt-2">{plan.credits}</p>
+                                    <p className="text-sm text-cyan-400 mt-2">{plan.credits}</p>
                                 </div>
                                 <ul className="space-y-3 mb-8">
                                     {plan.features.map((feat, j) => (
                                         <li key={j} className="flex items-center gap-2 text-slate-300 text-sm">
-                                            <CheckCircle className="w-4 h-4 text-green-400 shrink-0" /> {feat}
+                                            <CheckCircle className="w-4 h-4 text-teal-400 shrink-0" /> {feat}
                                         </li>
                                     ))}
                                 </ul>
                                 <Link to="/register">
                                     <motion.button
                                         whileHover={{ scale: 1.02 }}
-                                        className={`w-full py-3 rounded-xl font-semibold transition ${plan.popular
-                                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                                            : 'bg-white/20 text-white hover:bg-white/30'
+                                        className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${plan.popular
+                                            ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40'
+                                            : 'bg-white/20 text-white hover:bg-white/30 hover:shadow-lg hover:shadow-teal-500/10'
                                             }`}
                                     >
                                         Get Started
@@ -303,15 +308,15 @@ const Homepage = () => {
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl p-12 text-center"
+                        className="bg-gradient-to-r from-teal-600 via-cyan-600 to-emerald-600 rounded-3xl p-12 text-center shadow-2xl shadow-teal-500/20"
                     >
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Start Winning?</h2>
                         <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">Join the best bingo community and start earning real rewards today!</p>
                         <Link to="/register">
                             <motion.button
-                                whileHover={{ scale: 1.05 }}
+                                whileHover={{ scale: 1.05, boxShadow: '0 10px 30px -5px rgba(20, 184, 166, 0.5)' }}
                                 whileTap={{ scale: 0.95 }}
-                                className="px-8 py-4 bg-white text-purple-600 rounded-xl font-bold shadow-lg flex items-center gap-2 mx-auto"
+                                className="px-8 py-4 bg-white text-teal-600 rounded-xl font-bold shadow-xl flex items-center gap-2 mx-auto hover:shadow-2xl transition-all duration-300"
                             >
                                 <Crown className="w-5 h-5" /> Claim Your Welcome Bonus
                             </motion.button>
