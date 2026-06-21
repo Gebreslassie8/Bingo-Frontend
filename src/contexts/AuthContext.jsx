@@ -1,233 +1,76 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+};
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [users, setUsers] = useState(() => {
-        const saved = localStorage.getItem('bingoUsers');
-        if (saved) {
-            return JSON.parse(saved);
+    const [loading, setLoading] = useState(true);
+
+    // Demo users
+    const DEMO_USERS = {
+        admin: {
+            username: 'admin',
+            password: 'admin123',
+            role: 'admin',
+            name: 'Admin User',
+            credits: 10000
+        },
+        player: {
+            username: 'player',
+            password: 'player123',
+            role: 'player',
+            name: 'Player User',
+            credits: 1000
         }
-        // Create default admin account
-        return [
-            {
-                id: uuidv4(),
-                username: 'admin',
-                password: 'admin123',
-                email: 'admin@bingo.com',
-                role: 'admin',
-                wallet: {
-                    balance: 100000,
-                    totalDeposited: 100000,
-                    totalWithdrawn: 0,
-                    totalWon: 0,
-                    totalSpent: 0
-                },
-                stats: {
-                    gamesPlayed: 0,
-                    gamesWon: 0,
-                    totalWinnings: 0,
-                    totalSpent: 0
-                },
-                createdAt: new Date().toISOString(),
-                isActive: true
-            },
-            // Demo player account
-            {
-                id: uuidv4(),
-                username: 'player',
-                password: 'player123',
-                email: 'player@example.com',
-                role: 'player',
-                wallet: {
-                    balance: 1000,
-                    totalDeposited: 500,
-                    totalWithdrawn: 0,
-                    totalWon: 0,
-                    totalSpent: 0
-                },
-                stats: {
-                    gamesPlayed: 0,
-                    gamesWon: 0,
-                    totalWinnings: 0,
-                    totalSpent: 0
-                },
-                createdAt: new Date().toISOString(),
-                isActive: true
-            }
-        ];
-    });
-
-    useEffect(() => {
-        localStorage.setItem('bingoUsers', JSON.stringify(users));
-    }, [users]);
-
-    const login = (username, password) => {
-        const foundUser = users.find(
-            u => u.username === username && u.password === password && u.isActive
-        );
-
-        if (foundUser) {
-            const { password: _, ...userWithoutPassword } = foundUser;
-            setUser(userWithoutPassword);
-            localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
-            return { success: true, user: userWithoutPassword };
-        }
-        return { success: false, message: 'Invalid username or password' };
     };
 
-    const register = (username, password, email) => {
-        // Check if user exists
-        if (users.find(u => u.username === username)) {
-            return { success: false, message: 'Username already exists' };
+    useEffect(() => {
+        // Check for saved session
+        const savedUser = localStorage.getItem('bingoUser');
+        if (savedUser) {
+            try {
+                setUser(JSON.parse(savedUser));
+            } catch (e) {
+                localStorage.removeItem('bingoUser');
+            }
+        }
+        setLoading(false);
+    }, []);
+
+    const login = (username, password) => {
+        // Check if user exists in demo users
+        const userData = DEMO_USERS[username];
+
+        if (userData && userData.password === password) {
+            const { password: _, ...userWithoutPassword } = userData;
+            setUser(userWithoutPassword);
+            localStorage.setItem('bingoUser', JSON.stringify(userWithoutPassword));
+            return { success: true, user: userWithoutPassword };
         }
 
-        const newUser = {
-            id: uuidv4(),
-            username,
-            password,
-            email,
-            role: 'player',
-            wallet: {
-                balance: 500, // Starting bonus
-                totalDeposited: 0,
-                totalWithdrawn: 0,
-                totalWon: 0,
-                totalSpent: 0
-            },
-            stats: {
-                gamesPlayed: 0,
-                gamesWon: 0,
-                totalWinnings: 0,
-                totalSpent: 0
-            },
-            createdAt: new Date().toISOString(),
-            isActive: true
-        };
-
-        setUsers([...users, newUser]);
-        const { password: _, ...userWithoutPassword } = newUser;
-        setUser(userWithoutPassword);
-        localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
-        return { success: true, user: userWithoutPassword };
+        return { success: false, message: 'Invalid username or password' };
     };
 
     const logout = () => {
         setUser(null);
-        localStorage.removeItem('currentUser');
+        localStorage.removeItem('bingoUser');
     };
-
-    const updateUserWallet = (userId, amount, type) => {
-        setUsers(prevUsers => {
-            const updatedUsers = prevUsers.map(user => {
-                if (user.id === userId) {
-                    const newBalance = type === 'add' || type === 'win'
-                        ? user.wallet.balance + amount
-                        : user.wallet.balance - amount;
-
-                    const updatedWallet = { ...user.wallet, balance: newBalance };
-
-                    if (type === 'add') {
-                        updatedWallet.totalDeposited += amount;
-                    } else if (type === 'withdraw') {
-                        updatedWallet.totalWithdrawn += amount;
-                    } else if (type === 'win') {
-                        updatedWallet.totalWon += amount;
-                    } else if (type === 'spend') {
-                        updatedWallet.totalSpent += amount;
-                    }
-
-                    return { ...user, wallet: updatedWallet };
-                }
-                return user;
-            });
-
-            localStorage.setItem('bingoUsers', JSON.stringify(updatedUsers));
-
-            // Update current user
-            if (user && user.id === userId) {
-                const updatedUser = updatedUsers.find(u => u.id === userId);
-                const { password: _, ...userWithoutPassword } = updatedUser;
-                setUser(userWithoutPassword);
-                localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
-            }
-
-            return updatedUsers;
-        });
-    };
-
-    const updateUserStats = (userId, gameWon, winnings, cost) => {
-        setUsers(prevUsers => {
-            const updatedUsers = prevUsers.map(user => {
-                if (user.id === userId) {
-                    return {
-                        ...user,
-                        stats: {
-                            gamesPlayed: user.stats.gamesPlayed + 1,
-                            gamesWon: user.stats.gamesWon + (gameWon ? 1 : 0),
-                            totalWinnings: user.stats.totalWinnings + (gameWon ? winnings : 0),
-                            totalSpent: user.stats.totalSpent + cost
-                        }
-                    };
-                }
-                return user;
-            });
-
-            localStorage.setItem('bingoUsers', JSON.stringify(updatedUsers));
-
-            // Update current user
-            if (user && user.id === userId) {
-                const updatedUser = updatedUsers.find(u => u.id === userId);
-                const { password: _, ...userWithoutPassword } = updatedUser;
-                setUser(userWithoutPassword);
-                localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
-            }
-
-            return updatedUsers;
-        });
-    };
-
-    const getAllUsers = () => {
-        return users.map(({ password, ...user }) => user);
-    };
-
-    const updateUserStatus = (userId, isActive) => {
-        setUsers(prevUsers => {
-            const updatedUsers = prevUsers.map(user =>
-                user.id === userId ? { ...user, isActive } : user
-            );
-            localStorage.setItem('bingoUsers', JSON.stringify(updatedUsers));
-            return updatedUsers;
-        });
-    };
-
-    const updateUserBalance = (userId, amount, type) => {
-        updateUserWallet(userId, amount, type);
-    };
-
-    useEffect(() => {
-        const savedUser = localStorage.getItem('currentUser');
-        if (savedUser) {
-            setUser(JSON.parse(savedUser));
-        }
-    }, []);
 
     const value = {
         user,
-        users: getAllUsers(),
         login,
-        register,
         logout,
-        updateUserWallet,
-        updateUserStats,
-        updateUserStatus,
-        updateUserBalance,
-        isAdmin: user?.role === 'admin',
-        isAuthenticated: !!user
+        loading,
+        isAuthenticated: !!user,
+        isAdmin: user?.role === 'admin'
     };
 
     return (
