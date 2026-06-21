@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
     LayoutDashboard,
     Users,
@@ -20,15 +21,14 @@ import {
     Trophy,
     TrendingUp,
     HelpCircle,
-    Mail,
-    Bell,
-    Menu,
-    X,
     Target,
     Zap,
-    Shield
+    Shield,
+    Home,
+    CreditCard,
+    UserPlus,
+    Sparkles
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
     const location = useLocation();
@@ -37,7 +37,6 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
     const [expandedMenus, setExpandedMenus] = useState({});
     const [hoveredItem, setHoveredItem] = useState(null);
 
-    // Close sidebar on mobile when route changes
     useEffect(() => {
         if (isMobile && isOpen) {
             toggleSidebar();
@@ -54,6 +53,11 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
     const handleLogout = () => {
         logout();
         navigate('/login');
+    };
+
+    const getUserInitials = () => {
+        if (!user?.username) return 'U';
+        return user.username.charAt(0).toUpperCase();
     };
 
     const adminMenuItems = [
@@ -145,50 +149,41 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
         return submenu.some(item => location.pathname === item.path);
     };
 
-    const menuVariants = {
-        open: { x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } },
-        closed: { x: -280, transition: { type: "spring", stiffness: 300, damping: 30 } }
-    };
-
-    // Get user initials for avatar
-    const getUserInitials = () => {
-        if (!user?.username) return 'U';
-        return user.username.charAt(0).toUpperCase();
-    };
+    // Sidebar width based on state
+    const sidebarWidth = isMobile ? (isOpen ? 280 : 0) : (isOpen ? 280 : 72);
 
     return (
         <>
-            {/* Mobile Overlay */}
-            {isMobile && isOpen && (
-                <div
-                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20"
-                    onClick={toggleSidebar}
-                />
-            )}
-
             {/* Sidebar */}
             <motion.aside
                 initial={false}
-                animate={isOpen ? "open" : "closed"}
-                variants={menuVariants}
-                className={`fixed md:relative z-30 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 shadow-2xl h-full flex flex-col border-r border-teal-500/10 ${isOpen ? 'w-72' : 'w-20'
-                    }`}
+                animate={{
+                    width: sidebarWidth,
+                    x: isMobile && !isOpen ? -sidebarWidth : 0
+                }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className={`fixed md:relative z-30 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 shadow-2xl h-full flex flex-col border-r border-teal-500/10 overflow-hidden ${isMobile && !isOpen ? 'hidden' : ''}`}
+                style={{
+                    width: sidebarWidth,
+                    minWidth: sidebarWidth,
+                    maxWidth: sidebarWidth
+                }}
             >
                 {/* Logo Area */}
                 <div className={`p-4 border-b border-teal-500/10 ${!isOpen && 'px-2'}`}>
                     {isOpen ? (
                         <Link to={userRole === 'admin' ? '/admin' : '/dashboard'} className="flex items-center gap-3 group">
                             <div className="relative">
-                                <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/25 group-hover:scale-110 transition-transform">
+                                <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/25 group-hover:scale-110 transition-transform flex-shrink-0">
                                     <Target className="w-6 h-6 text-white" />
                                 </div>
                                 <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse border-2 border-slate-800"></div>
                             </div>
-                            <div>
-                                <h1 className="text-lg font-bold bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+                            <div className="overflow-hidden">
+                                <h1 className="text-lg font-bold bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent whitespace-nowrap">
                                     BINGO BUSINESS
                                 </h1>
-                                <p className="text-xs text-slate-400">{userRole === 'admin' ? 'Admin Panel' : 'Player Panel'}</p>
+                                <p className="text-xs text-slate-400 whitespace-nowrap">{userRole === 'admin' ? 'Admin Panel' : 'Player Panel'}</p>
                             </div>
                         </Link>
                     ) : (
@@ -201,11 +196,11 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                     )}
                 </div>
 
-                {/* User Profile Summary (when sidebar is open) */}
+                {/* User Profile Summary */}
                 {isOpen && user && (
                     <div className="mx-4 mt-4 p-3 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 rounded-xl border border-teal-500/20">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg shadow-teal-500/20">
+                            <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg shadow-teal-500/20 flex-shrink-0">
                                 <span className="text-white font-bold text-lg">
                                     {getUserInitials()}
                                 </span>
@@ -215,7 +210,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                                 <p className="text-slate-400 text-xs truncate">{user?.email || 'user@email.com'}</p>
                             </div>
                             {userRole === 'player' && (
-                                <div className="text-right">
+                                <div className="text-right flex-shrink-0">
                                     <p className="text-teal-400 text-sm font-bold">{user?.credits || 0}</p>
                                     <p className="text-slate-500 text-[10px]">credits</p>
                                 </div>
@@ -225,7 +220,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                 )}
 
                 {/* Navigation Menu */}
-                <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1 custom-scrollbar">
+                <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
                     {menuItems.map((item) => {
                         const Icon = item.icon;
                         const active = isActive(item.path);
@@ -246,21 +241,21 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                                     onMouseEnter={() => setHoveredItem(item.label)}
                                     onMouseLeave={() => setHoveredItem(null)}
                                     className={`flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-200 group relative
-                    ${active || submenuActive
+                                    ${active || submenuActive
                                             ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/25'
                                             : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
                                         }
-                    ${!isOpen && 'justify-center'}`}
+                                    ${!isOpen && 'justify-center'}`}
                                 >
-                                    <div className="flex items-center gap-3">
-                                        <Icon className={`w-5 h-5 ${active ? 'text-white' : item.color}`} />
+                                    <div className="flex items-center gap-3 min-w-0">
+                                        <Icon className={`w-5 h-5 flex-shrink-0 ${active ? 'text-white' : item.color}`} />
                                         {isOpen && (
-                                            <span className="text-sm font-medium">{item.label}</span>
+                                            <span className="text-sm font-medium truncate">{item.label}</span>
                                         )}
                                     </div>
 
                                     {isOpen && hasSubmenu && (
-                                        <div className="ml-auto">
+                                        <div className="ml-auto flex-shrink-0">
                                             {isExpanded ? (
                                                 <ChevronUp className="w-4 h-4 text-slate-400" />
                                             ) : (
@@ -272,7 +267,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
 
                                 {/* Tooltip for collapsed state */}
                                 {!isOpen && hoveredItem === item.label && (
-                                    <div className="fixed left-20 z-50 bg-slate-800 text-white text-sm px-3 py-2 rounded-lg shadow-xl whitespace-nowrap pointer-events-none border border-teal-500/20">
+                                    <div className="fixed left-[76px] z-50 bg-slate-800 text-white text-sm px-3 py-2 rounded-lg shadow-xl whitespace-nowrap pointer-events-none border border-teal-500/20">
                                         {item.label}
                                         {item.description && (
                                             <div className="text-xs text-slate-400">{item.description}</div>
@@ -299,13 +294,13 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                                                             key={subItem.path}
                                                             to={subItem.path}
                                                             className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-sm
-                                ${isSubActive
+                                                            ${isSubActive
                                                                     ? 'bg-teal-500/20 text-teal-400'
                                                                     : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
                                                                 }`}
                                                         >
-                                                            <SubIcon className="w-4 h-4" />
-                                                            <span>{subItem.label}</span>
+                                                            <SubIcon className="w-4 h-4 flex-shrink-0" />
+                                                            <span className="truncate">{subItem.label}</span>
                                                         </Link>
                                                     );
                                                 })}
@@ -320,44 +315,33 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
 
                 {/* Bottom Section */}
                 <div className="p-4 border-t border-teal-500/10 space-y-2">
-                    {/* Support Link */}
                     <Link
                         to="/support"
                         className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-slate-400 hover:text-white hover:bg-slate-700/50
-              ${!isOpen && 'justify-center'}`}
+                        ${!isOpen && 'justify-center'}`}
                     >
-                        <HelpCircle className="w-5 h-5" />
-                        {isOpen && <span className="text-sm">Help & Support</span>}
+                        <HelpCircle className="w-5 h-5 flex-shrink-0" />
+                        {isOpen && <span className="text-sm truncate">Help & Support</span>}
                     </Link>
 
-                    {/* Logout Button */}
                     <button
                         onClick={handleLogout}
                         className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-red-400 hover:text-red-300 hover:bg-red-500/10
-              ${!isOpen && 'justify-center'}`}
+                        ${!isOpen && 'justify-center'}`}
                     >
-                        <LogOut className="w-5 h-5" />
-                        {isOpen && <span className="text-sm">Logout</span>}
+                        <LogOut className="w-5 h-5 flex-shrink-0" />
+                        {isOpen && <span className="text-sm truncate">Logout</span>}
                     </button>
                 </div>
             </motion.aside>
 
-            {/* Mobile Toggle Button */}
-            {isMobile && (
-                <button
-                    onClick={toggleSidebar}
-                    className="fixed top-4 left-4 z-40 bg-slate-800 text-white p-2.5 rounded-xl shadow-lg hover:bg-slate-700 transition-all border border-teal-500/20"
-                >
-                    {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                </button>
-            )}
-
-            {/* Desktop Toggle Button */}
+            {/* Desktop Toggle Button - Always visible */}
             {!isMobile && (
                 <button
                     onClick={toggleSidebar}
-                    className="fixed left-0 top-20 z-40 bg-slate-800 text-white p-1.5 rounded-r-lg hover:bg-slate-700 transition-all shadow-lg border border-teal-500/10 hover:border-teal-500/30"
-                    style={{ left: isOpen ? '284px' : '72px' }}
+                    className={`fixed top-1/2 z-40 bg-slate-800 text-white p-1.5 rounded-r-lg hover:bg-slate-700 transition-all shadow-lg border border-teal-500/10 hover:border-teal-500/30
+                        ${isOpen ? 'left-[276px]' : 'left-[68px]'}`}
+                    style={{ transform: 'translateY(-50%)' }}
                 >
                     {isOpen ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                 </button>
