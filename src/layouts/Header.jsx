@@ -1,12 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import {
+    Menu,
+    Bell,
+    User,
+    LogOut,
+    Settings,
+    ChevronDown,
+    Wallet,
+    Crown,
+    Gift,
+    Sparkles,
+    Target,
+    CheckCircle,
+    X,
+    Mail
+} from 'lucide-react';
 
-const Header = ({ toggleSidebar, user, isMobile }) => {
+const Header = ({ toggleSidebar, user, isMobile, sidebarOpen }) => {
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [notifications, setNotifications] = useState([
         { id: 1, message: 'Welcome to Bingo Business!', type: 'info', read: false },
         { id: 2, message: 'New daily bonus available!', type: 'success', read: false },
+        { id: 3, message: 'You won 500 credits in Classic Bingo!', type: 'success', read: false },
     ]);
     const [showNotifications, setShowNotifications] = useState(false);
     const menuRef = useRef(null);
@@ -41,23 +58,31 @@ const Header = ({ toggleSidebar, user, isMobile }) => {
         setNotifications(notifications.map(n => ({ ...n, read: true })));
     };
 
+    const getNotificationIcon = (type) => {
+        switch (type) {
+            case 'success': return <CheckCircle className="w-4 h-4 text-emerald-400" />;
+            case 'info': return <Sparkles className="w-4 h-4 text-teal-400" />;
+            default: return <Bell className="w-4 h-4 text-slate-400" />;
+        }
+    };
+
     return (
-        <header className="bg-gradient-to-r from-slate-800 to-slate-900 shadow-lg">
+        <header className={`bg-slate-800/80 backdrop-blur-sm border-b border-teal-500/10 shadow-lg transition-all duration-300 ${!isMobile && !sidebarOpen ? 'ml-[72px]' : 'ml-0'
+            }`}>
             <div className="px-4 md:px-6 py-3">
                 <div className="flex items-center justify-between">
                     {/* Left Side */}
                     <div className="flex items-center gap-3">
                         <button
                             onClick={toggleSidebar}
-                            className="text-white p-2 hover:bg-slate-700 rounded-lg transition-all"
+                            className="text-white p-2 hover:bg-teal-500/20 rounded-lg transition-all hover:scale-105"
                         >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
+                            <Menu className="w-6 h-6" />
                         </button>
                         <div>
-                            <h2 className="text-white text-lg font-semibold">
-                                Welcome back, {user?.username || 'Player'}!
+                            <h2 className="text-white text-lg font-semibold flex items-center gap-2">
+                                <span>Welcome back, {user?.username || 'Player'}!</span>
+                                <Target className="w-4 h-4 text-teal-400" />
                             </h2>
                             <p className="text-slate-400 text-xs">Ready to play and win?</p>
                         </div>
@@ -66,11 +91,13 @@ const Header = ({ toggleSidebar, user, isMobile }) => {
                     {/* Right Side */}
                     <div className="flex items-center gap-2 md:gap-4">
                         {/* Balance Card */}
-                        <div className="hidden md:flex items-center gap-2 bg-slate-700 rounded-lg px-3 py-2">
-                            <span className="text-yellow-400 text-xl">💰</span>
+                        <div className="hidden md:flex items-center gap-2 bg-gradient-to-r from-teal-500/10 to-cyan-500/10 border border-teal-500/20 rounded-xl px-3 py-2">
+                            <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-lg shadow-teal-500/20">
+                                <Wallet className="w-4 h-4 text-white" />
+                            </div>
                             <div>
                                 <p className="text-xs text-slate-400">Balance</p>
-                                <p className="text-white font-bold">{user?.wallet?.balance || 0}</p>
+                                <p className="text-white font-bold">{user?.credits || user?.wallet?.balance || 0}</p>
                             </div>
                         </div>
 
@@ -78,13 +105,11 @@ const Header = ({ toggleSidebar, user, isMobile }) => {
                         <div className="relative" ref={menuRef}>
                             <button
                                 onClick={() => setShowNotifications(!showNotifications)}
-                                className="relative text-white p-2 hover:bg-slate-700 rounded-lg transition-all"
+                                className="relative text-white p-2 hover:bg-teal-500/20 rounded-lg transition-all hover:scale-105"
                             >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                                </svg>
+                                <Bell className="w-6 h-6" />
                                 {unreadCount > 0 && (
-                                    <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                    <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center border-2 border-slate-800">
                                         {unreadCount}
                                     </span>
                                 )}
@@ -92,33 +117,49 @@ const Header = ({ toggleSidebar, user, isMobile }) => {
 
                             {/* Notifications Dropdown */}
                             {showNotifications && (
-                                <div className="absolute right-0 mt-2 w-80 bg-slate-800 rounded-lg shadow-xl z-50">
-                                    <div className="p-3 border-b border-slate-700 flex justify-between items-center">
-                                        <h3 className="text-white font-semibold">Notifications</h3>
+                                <div className="absolute right-0 mt-2 w-80 bg-slate-800 rounded-xl shadow-2xl z-50 border border-teal-500/20 overflow-hidden">
+                                    <div className="p-4 border-b border-teal-500/10 flex justify-between items-center bg-slate-800/50">
+                                        <div className="flex items-center gap-2">
+                                            <Bell className="w-5 h-5 text-teal-400" />
+                                            <h3 className="text-white font-semibold">Notifications</h3>
+                                        </div>
                                         {unreadCount > 0 && (
                                             <button
                                                 onClick={markAllAsRead}
-                                                className="text-xs text-purple-400 hover:text-purple-300"
+                                                className="text-xs text-teal-400 hover:text-teal-300 transition-colors hover:underline"
                                             >
                                                 Mark all as read
                                             </button>
                                         )}
                                     </div>
-                                    <div className="max-h-96 overflow-y-auto">
+                                    <div className="max-h-96 overflow-y-auto custom-scrollbar">
                                         {notifications.length === 0 ? (
-                                            <div className="p-4 text-center text-slate-400">
-                                                No notifications
+                                            <div className="p-8 text-center text-slate-400">
+                                                <Bell className="w-12 h-12 mx-auto mb-2 text-slate-600" />
+                                                <p>No notifications</p>
                                             </div>
                                         ) : (
                                             notifications.map(notif => (
                                                 <div
                                                     key={notif.id}
                                                     onClick={() => markAsRead(notif.id)}
-                                                    className={`p-3 border-b border-slate-700 cursor-pointer transition-all
-                            ${notif.read ? 'opacity-60' : 'bg-slate-700 bg-opacity-30'}`}
+                                                    className={`p-4 border-b border-slate-700/50 cursor-pointer transition-all hover:bg-slate-700/30
+                                                        ${notif.read ? 'opacity-60' : 'bg-teal-500/5'}`}
                                                 >
-                                                    <p className="text-white text-sm">{notif.message}</p>
-                                                    <p className="text-slate-400 text-xs mt-1">Just now</p>
+                                                    <div className="flex items-start gap-3">
+                                                        <div className="mt-1">
+                                                            {getNotificationIcon(notif.type)}
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <p className={`text-sm ${notif.read ? 'text-slate-400' : 'text-white'}`}>
+                                                                {notif.message}
+                                                            </p>
+                                                            <p className="text-slate-500 text-xs mt-1">Just now</p>
+                                                        </div>
+                                                        {!notif.read && (
+                                                            <div className="w-2 h-2 bg-teal-400 rounded-full mt-2"></div>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             ))
                                         )}
@@ -131,38 +172,36 @@ const Header = ({ toggleSidebar, user, isMobile }) => {
                         <div className="relative" ref={menuRef}>
                             <button
                                 onClick={() => setShowUserMenu(!showUserMenu)}
-                                className="flex items-center gap-2 text-white hover:bg-slate-700 rounded-lg px-2 py-1 transition-all"
+                                className="flex items-center gap-2 text-white hover:bg-teal-500/20 rounded-xl px-2 py-1 transition-all hover:scale-105"
                             >
-                                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                                <div className="w-9 h-9 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg shadow-teal-500/20">
                                     <span className="text-white text-sm font-bold">
                                         {user?.username?.charAt(0).toUpperCase() || 'U'}
                                     </span>
                                 </div>
                                 {!isMobile && (
                                     <>
-                                        <span className="text-sm font-medium hidden md:inline">
+                                        <span className="text-sm font-medium hidden md:inline text-white">
                                             {user?.username}
                                         </span>
-                                        <svg className="w-4 h-4 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                        </svg>
+                                        <ChevronDown className="w-4 h-4 hidden md:block text-slate-400" />
                                     </>
                                 )}
                             </button>
 
                             {/* User Dropdown Menu */}
                             {showUserMenu && (
-                                <div className="absolute right-0 mt-2 w-64 bg-slate-800 rounded-lg shadow-xl z-50">
-                                    <div className="p-4 border-b border-slate-700">
+                                <div className="absolute right-0 mt-2 w-64 bg-slate-800 rounded-xl shadow-2xl z-50 border border-teal-500/20 overflow-hidden">
+                                    <div className="p-4 border-b border-teal-500/10 bg-gradient-to-r from-teal-500/10 to-cyan-500/10">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                                            <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg shadow-teal-500/20">
                                                 <span className="text-white text-xl font-bold">
                                                     {user?.username?.charAt(0).toUpperCase() || 'U'}
                                                 </span>
                                             </div>
                                             <div>
                                                 <p className="text-white font-semibold">{user?.username}</p>
-                                                <p className="text-slate-400 text-xs">{user?.email}</p>
+                                                <p className="text-slate-400 text-xs truncate max-w-[150px]">{user?.email}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -170,25 +209,33 @@ const Header = ({ toggleSidebar, user, isMobile }) => {
                                         <Link
                                             to="/profile"
                                             onClick={() => setShowUserMenu(false)}
-                                            className="flex items-center gap-3 px-4 py-2 text-slate-300 hover:bg-slate-700 transition-all"
+                                            className="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:bg-teal-500/10 hover:text-white transition-all"
                                         >
-                                            <span>👤</span>
+                                            <User className="w-5 h-5 text-teal-400" />
                                             <span>Profile</span>
                                         </Link>
                                         <Link
                                             to="/settings"
                                             onClick={() => setShowUserMenu(false)}
-                                            className="flex items-center gap-3 px-4 py-2 text-slate-300 hover:bg-slate-700 transition-all"
+                                            className="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:bg-teal-500/10 hover:text-white transition-all"
                                         >
-                                            <span>⚙️</span>
+                                            <Settings className="w-5 h-5 text-cyan-400" />
                                             <span>Settings</span>
                                         </Link>
-                                        <div className="border-t border-slate-700 my-1"></div>
+                                        <Link
+                                            to="/wallet"
+                                            onClick={() => setShowUserMenu(false)}
+                                            className="flex items-center gap-3 px-4 py-2.5 text-slate-300 hover:bg-teal-500/10 hover:text-white transition-all"
+                                        >
+                                            <Wallet className="w-5 h-5 text-emerald-400" />
+                                            <span>Wallet</span>
+                                        </Link>
+                                        <div className="border-t border-teal-500/10 my-1"></div>
                                         <button
                                             onClick={handleLogout}
-                                            className="w-full flex items-center gap-3 px-4 py-2 text-red-400 hover:bg-slate-700 transition-all"
+                                            className="w-full flex items-center gap-3 px-4 py-2.5 text-red-400 hover:bg-red-500/10 transition-all"
                                         >
-                                            <span>🚪</span>
+                                            <LogOut className="w-5 h-5" />
                                             <span>Logout</span>
                                         </button>
                                     </div>
@@ -198,6 +245,22 @@ const Header = ({ toggleSidebar, user, isMobile }) => {
                     </div>
                 </div>
             </div>
+
+            <style>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: #14b8a6;
+                    border-radius: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: #06b6d4;
+                }
+            `}</style>
         </header>
     );
 };
