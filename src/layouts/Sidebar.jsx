@@ -27,7 +27,10 @@ import {
     Home,
     CreditCard,
     UserPlus,
-    Sparkles
+    Sparkles,
+    DollarSign,
+    History,
+    Award
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
@@ -60,6 +63,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
         return user.username.charAt(0).toUpperCase();
     };
 
+    // Admin Menu Items - Wallet Management as single item (no submenu)
     const adminMenuItems = [
         {
             path: '/admin',
@@ -74,6 +78,13 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
             label: 'Manage Users',
             color: 'text-cyan-400',
             description: 'View all users'
+        },
+        {
+            path: '/admin/wallet',
+            icon: Wallet,
+            label: 'Wallet Management',
+            color: 'text-purple-400',
+            description: 'Manage user wallets'
         },
         {
             path: '/admin/reports',
@@ -91,11 +102,12 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
             submenu: [
                 { path: '/admin/settings/general', label: 'General', icon: Settings },
                 { path: '/admin/settings/game', label: 'Game Settings', icon: Gamepad2 },
-                { path: '/admin/settings/payment', label: 'Payment', icon: Wallet }
+                { path: '/admin/settings/payment', label: 'Payment', icon: CreditCard }
             ]
         }
     ];
 
+    // Player Menu Items - Wallet as single item (no submenu)
     const playerMenuItems = [
         {
             path: '/dashboard',
@@ -118,7 +130,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
             color: 'text-amber-400',
             description: 'Buy credits',
             submenu: [
-                { path: '/shop/credits', label: 'Buy Credits', icon: Gift },
+                { path: '/shop/credits', label: 'Buy Credits', icon: CreditCard },
                 { path: '/shop/vip', label: 'VIP Membership', icon: Crown },
                 { path: '/shop/special', label: 'Special Offers', icon: Trophy }
             ]
@@ -126,14 +138,16 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
         {
             path: '/wallet',
             icon: Wallet,
-            label: 'Wallet',
+            label: 'My Wallet',
             color: 'text-purple-400',
-            description: 'Manage funds',
-            submenu: [
-                { path: '/wallet/deposit', label: 'Deposit', icon: Gift },
-                { path: '/wallet/withdraw', label: 'Withdraw', icon: LogOut },
-                { path: '/wallet/transactions', label: 'History', icon: BarChart3 }
-            ]
+            description: 'Manage your credits'
+        },
+        {
+            path: '/profile',
+            icon: User,
+            label: 'Profile',
+            color: 'text-pink-400',
+            description: 'Your account settings'
         }
     ];
 
@@ -141,7 +155,8 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
 
     const isActive = (path) => {
         if (path === '/admin' && location.pathname === '/admin') return true;
-        if (path !== '/admin' && location.pathname.startsWith(path)) return true;
+        if (path === '/dashboard' && location.pathname === '/dashboard') return true;
+        if (path !== '/admin' && path !== '/dashboard' && location.pathname.startsWith(path)) return true;
         return location.pathname === path;
     };
 
@@ -215,6 +230,12 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                                     <p className="text-slate-500 text-[10px]">credits</p>
                                 </div>
                             )}
+                            {userRole === 'admin' && (
+                                <div className="text-right flex-shrink-0">
+                                    <p className="text-purple-400 text-sm font-bold">Admin</p>
+                                    <p className="text-slate-500 text-[10px]">privileges</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
@@ -227,6 +248,17 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                         const hasSubmenu = item.submenu && item.submenu.length > 0;
                         const isExpanded = expandedMenus[item.label];
                         const submenuActive = hasSubmenu && isSubmenuActive(item.submenu);
+
+                        // Auto-expand if submenu is active
+                        if (hasSubmenu && submenuActive && !isExpanded) {
+                            // Use a timeout to avoid state updates during render
+                            setTimeout(() => {
+                                setExpandedMenus(prev => ({
+                                    ...prev,
+                                    [item.label]: true
+                                }));
+                            }, 0);
+                        }
 
                         return (
                             <div key={item.path}>

@@ -16,6 +16,8 @@ import PricingPage from './pages/PricingPage';
 // Dashboard pages
 import AdminDashboard from './Admin/AdminDashboard';
 import Reports from './Admin/Reports';
+import WalletManagement from './Admin/WalletManagement';
+import UserWallet from './Users/UserWallet';
 import UserDashboard from './Users/UserDashboard';
 import GamePage from './pages/GamePage';
 import ShopPage from './pages/ShopPage';
@@ -68,6 +70,9 @@ function App() {
         <Route path="/admin/users" element={<UsersPage />} />
         <Route path="/admin/settings" element={<SettingsPage />} />
         <Route path="/admin/reports" element={<Reports />} />
+
+        <Route path="/admin/wallet" element={<WalletManagement />} />
+        <Route path="/wallet" element={<UserWallet />} />
       </Route>
     </Routes>
   );
