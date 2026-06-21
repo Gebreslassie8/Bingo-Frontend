@@ -32,30 +32,30 @@
     @apply aspect-square flex items-center justify-center text-lg font-bold rounded-lg transition-all duration-300 cursor-pointer;
   }
 
-  /* Custom scrollbar styling */
+  /* Custom scrollbar styling - Deep Teal Theme */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #1e293b;
+    background: #0d1a1f;
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #8b5cf6;
+    background: linear-gradient(to bottom, #0d9488, #0f766e);
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #a78bfa;
+    background: linear-gradient(to bottom, #14b8a6, #0d9488);
   }
 
-  /* Firefox scrollbar */
+  /* Firefox scrollbar - Deep Teal */
   * {
     scrollbar-width: thin;
-    scrollbar-color: #8b5cf6 #1e293b;
+    scrollbar-color: #0d9488 #0d1a1f;
   }
 }
 
@@ -92,20 +92,20 @@
   animation: bounce-slow 1s ease-in-out infinite;
 }
 
-@keyframes pulse-gold {
+@keyframes pulse-teal {
 
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+    box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.7);
   }
 
   50% {
-    box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+    box-shadow: 0 0 0 10px rgba(13, 148, 136, 0);
   }
 }
 
-.animate-pulse-gold {
-  animation: pulse-gold 1.5s infinite;
+.animate-pulse-teal {
+  animation: pulse-teal 1.5s infinite;
 }
 
 @keyframes blob {
