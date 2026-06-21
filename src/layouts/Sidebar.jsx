@@ -23,7 +23,10 @@ import {
     Mail,
     Bell,
     Menu,
-    X
+    X,
+    Target,
+    Zap,
+    Shield
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -58,38 +61,28 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
             path: '/admin',
             icon: LayoutDashboard,
             label: 'Dashboard',
-            color: 'text-blue-400',
+            color: 'text-teal-400',
             description: 'Overview & Analytics'
         },
         {
             path: '/admin/users',
             icon: Users,
-            label: 'Users',
-            color: 'text-green-400',
-            description: 'Manage players',
-            submenu: [
-                { path: '/admin/users/all', label: 'All Users', icon: Users },
-                { path: '/admin/users/active', label: 'Active Players', icon: Trophy },
-                { path: '/admin/users/suspended', label: 'Suspended', icon: User }
-            ]
+            label: 'Manage Users',
+            color: 'text-cyan-400',
+            description: 'View all users'
         },
         {
             path: '/admin/reports',
             icon: BarChart3,
             label: 'Reports',
-            color: 'text-purple-400',
-            description: 'Analytics & Stats',
-            submenu: [
-                { path: '/admin/reports/revenue', label: 'Revenue Report', icon: TrendingUp },
-                { path: '/admin/reports/players', label: 'Player Report', icon: Users },
-                { path: '/admin/reports/games', label: 'Game Report', icon: Gamepad2 }
-            ]
+            color: 'text-emerald-400',
+            description: 'Analytics & Stats'
         },
         {
             path: '/admin/settings',
             icon: Settings,
             label: 'Settings',
-            color: 'text-yellow-400',
+            color: 'text-amber-400',
             description: 'System config',
             submenu: [
                 { path: '/admin/settings/general', label: 'General', icon: Settings },
@@ -104,21 +97,21 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
             path: '/dashboard',
             icon: LayoutDashboard,
             label: 'Dashboard',
-            color: 'text-blue-400',
+            color: 'text-teal-400',
             description: 'Your overview'
         },
         {
             path: '/game',
             icon: Gamepad2,
             label: 'Play Game',
-            color: 'text-green-400',
+            color: 'text-cyan-400',
             description: 'Start playing'
         },
         {
             path: '/shop',
             icon: ShoppingBag,
             label: 'Shop',
-            color: 'text-yellow-400',
+            color: 'text-amber-400',
             description: 'Buy credits',
             submenu: [
                 { path: '/shop/credits', label: 'Buy Credits', icon: Gift },
@@ -157,12 +150,18 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
         closed: { x: -280, transition: { type: "spring", stiffness: 300, damping: 30 } }
     };
 
+    // Get user initials for avatar
+    const getUserInitials = () => {
+        if (!user?.username) return 'U';
+        return user.username.charAt(0).toUpperCase();
+    };
+
     return (
         <>
             {/* Mobile Overlay */}
             {isMobile && isOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-20"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20"
                     onClick={toggleSidebar}
                 />
             )}
@@ -172,19 +171,21 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                 initial={false}
                 animate={isOpen ? "open" : "closed"}
                 variants={menuVariants}
-                className={`fixed md:relative z-30 bg-gradient-to-b from-slate-800 to-slate-900 shadow-2xl h-full flex flex-col ${isOpen ? 'w-72' : 'w-20'
+                className={`fixed md:relative z-30 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 shadow-2xl h-full flex flex-col border-r border-teal-500/10 ${isOpen ? 'w-72' : 'w-20'
                     }`}
             >
                 {/* Logo Area */}
-                <div className={`p-4 border-b border-slate-700/50 ${!isOpen && 'px-2'}`}>
+                <div className={`p-4 border-b border-teal-500/10 ${!isOpen && 'px-2'}`}>
                     {isOpen ? (
                         <Link to={userRole === 'admin' ? '/admin' : '/dashboard'} className="flex items-center gap-3 group">
                             <div className="relative">
-                                <div className="text-3xl group-hover:scale-110 transition-transform">🎯</div>
-                                <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/25 group-hover:scale-110 transition-transform">
+                                    <Target className="w-6 h-6 text-white" />
+                                </div>
+                                <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse border-2 border-slate-800"></div>
                             </div>
                             <div>
-                                <h1 className="text-lg font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                                <h1 className="text-lg font-bold bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
                                     BINGO BUSINESS
                                 </h1>
                                 <p className="text-xs text-slate-400">{userRole === 'admin' ? 'Admin Panel' : 'Player Panel'}</p>
@@ -192,28 +193,30 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                         </Link>
                     ) : (
                         <div className="flex justify-center relative">
-                            <div className="text-2xl group-hover:scale-110 transition-transform">🎯</div>
-                            <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/25">
+                                <Target className="w-6 h-6 text-white" />
+                            </div>
+                            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse border-2 border-slate-800"></div>
                         </div>
                     )}
                 </div>
 
                 {/* User Profile Summary (when sidebar is open) */}
                 {isOpen && user && (
-                    <div className="mx-4 mt-4 p-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl border border-purple-500/30">
+                    <div className="mx-4 mt-4 p-3 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 rounded-xl border border-teal-500/20">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                            <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg shadow-teal-500/20">
                                 <span className="text-white font-bold text-lg">
-                                    {user?.username?.charAt(0).toUpperCase()}
+                                    {getUserInitials()}
                                 </span>
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-white text-sm font-medium truncate">{user?.username}</p>
-                                <p className="text-slate-400 text-xs truncate">{user?.email}</p>
+                                <p className="text-white text-sm font-medium truncate">{user?.username || 'User'}</p>
+                                <p className="text-slate-400 text-xs truncate">{user?.email || 'user@email.com'}</p>
                             </div>
                             {userRole === 'player' && (
                                 <div className="text-right">
-                                    <p className="text-yellow-400 text-sm font-bold">{user?.wallet?.balance || 0}</p>
+                                    <p className="text-teal-400 text-sm font-bold">{user?.credits || 0}</p>
                                     <p className="text-slate-500 text-[10px]">credits</p>
                                 </div>
                             )}
@@ -222,7 +225,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                 )}
 
                 {/* Navigation Menu */}
-                <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1">
+                <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1 custom-scrollbar">
                     {menuItems.map((item) => {
                         const Icon = item.icon;
                         const active = isActive(item.path);
@@ -244,7 +247,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                                     onMouseLeave={() => setHoveredItem(null)}
                                     className={`flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-200 group relative
                     ${active || submenuActive
-                                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                                            ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg shadow-teal-500/25'
                                             : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
                                         }
                     ${!isOpen && 'justify-center'}`}
@@ -259,9 +262,9 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                                     {isOpen && hasSubmenu && (
                                         <div className="ml-auto">
                                             {isExpanded ? (
-                                                <ChevronUp className="w-4 h-4" />
+                                                <ChevronUp className="w-4 h-4 text-slate-400" />
                                             ) : (
-                                                <ChevronDown className="w-4 h-4" />
+                                                <ChevronDown className="w-4 h-4 text-slate-400" />
                                             )}
                                         </div>
                                     )}
@@ -269,7 +272,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
 
                                 {/* Tooltip for collapsed state */}
                                 {!isOpen && hoveredItem === item.label && (
-                                    <div className="fixed left-20 z-50 bg-slate-800 text-white text-sm px-3 py-2 rounded-lg shadow-xl whitespace-nowrap pointer-events-none">
+                                    <div className="fixed left-20 z-50 bg-slate-800 text-white text-sm px-3 py-2 rounded-lg shadow-xl whitespace-nowrap pointer-events-none border border-teal-500/20">
                                         {item.label}
                                         {item.description && (
                                             <div className="text-xs text-slate-400">{item.description}</div>
@@ -297,7 +300,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                                                             to={subItem.path}
                                                             className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-sm
                                 ${isSubActive
-                                                                    ? 'bg-purple-500/20 text-purple-400'
+                                                                    ? 'bg-teal-500/20 text-teal-400'
                                                                     : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
                                                                 }`}
                                                         >
@@ -316,7 +319,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
                 </nav>
 
                 {/* Bottom Section */}
-                <div className="p-4 border-t border-slate-700/50 space-y-2">
+                <div className="p-4 border-t border-teal-500/10 space-y-2">
                     {/* Support Link */}
                     <Link
                         to="/support"
@@ -343,7 +346,7 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
             {isMobile && (
                 <button
                     onClick={toggleSidebar}
-                    className="fixed top-4 left-4 z-40 bg-slate-800 text-white p-2 rounded-lg shadow-lg hover:bg-slate-700 transition-all"
+                    className="fixed top-4 left-4 z-40 bg-slate-800 text-white p-2.5 rounded-xl shadow-lg hover:bg-slate-700 transition-all border border-teal-500/20"
                 >
                     {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                 </button>
@@ -353,12 +356,29 @@ const Sidebar = ({ isOpen, toggleSidebar, isMobile, userRole }) => {
             {!isMobile && (
                 <button
                     onClick={toggleSidebar}
-                    className="fixed left-0 top-20 z-40 bg-slate-800 text-white p-1.5 rounded-r-lg hover:bg-slate-700 transition-all shadow-lg"
+                    className="fixed left-0 top-20 z-40 bg-slate-800 text-white p-1.5 rounded-r-lg hover:bg-slate-700 transition-all shadow-lg border border-teal-500/10 hover:border-teal-500/30"
                     style={{ left: isOpen ? '284px' : '72px' }}
                 >
                     {isOpen ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                 </button>
             )}
+
+            {/* Custom scrollbar styles */}
+            <style>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: #14b8a6;
+                    border-radius: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: #06b6d4;
+                }
+            `}</style>
         </>
     );
 };
