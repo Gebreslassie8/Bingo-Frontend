@@ -575,123 +575,140 @@ const UsersPage = () => {
                     </div>
                 </div>
 
-                {/* Delete Modal */}
+                {/* Delete Modal - Centered */}
                 <AnimatePresence>
                     {showDeleteModal && userToDelete && (
-                        <>
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                            {/* Backdrop */}
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
+                                className="absolute inset-0 bg-black/70 backdrop-blur-sm"
                                 onClick={() => setShowDeleteModal(false)}
                             />
+                            {/* Modal */}
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-50"
+                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                                className="relative bg-slate-800 rounded-2xl shadow-2xl p-6 max-w-md w-full border border-red-500/20"
+                                onClick={(e) => e.stopPropagation()}
                             >
-                                <div className="bg-slate-800 rounded-2xl shadow-2xl p-6 border border-red-500/20">
-                                    <div className="text-center mb-6">
-                                        <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                            <Trash2 className="w-8 h-8 text-red-400" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-white">Delete User</h3>
-                                        <p className="text-slate-400 mt-2">
-                                            Are you sure you want to delete <span className="text-white font-semibold">{userToDelete.username}</span>? This action cannot be undone.
-                                        </p>
+                                <div className="text-center mb-6">
+                                    <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <Trash2 className="w-8 h-8 text-red-400" />
                                     </div>
-                                    <div className="flex gap-3">
-                                        <button
-                                            onClick={() => setShowDeleteModal(false)}
-                                            className="flex-1 px-4 py-2 bg-slate-700/50 text-slate-300 rounded-lg hover:bg-slate-600/50 transition-all duration-300"
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            onClick={confirmDelete}
-                                            className="flex-1 px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:scale-105 transition-all duration-300"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
+                                    <h3 className="text-2xl font-bold text-white">Delete User</h3>
+                                    <p className="text-slate-400 mt-2">
+                                        Are you sure you want to delete <span className="text-white font-semibold">{userToDelete.username}</span>? This action cannot be undone.
+                                    </p>
+                                </div>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setShowDeleteModal(false)}
+                                        className="flex-1 px-4 py-2 bg-slate-700/50 text-slate-300 rounded-lg hover:bg-slate-600/50 transition-all duration-300"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={confirmDelete}
+                                        className="flex-1 px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:scale-105 transition-all duration-300"
+                                    >
+                                        Delete
+                                    </button>
                                 </div>
                             </motion.div>
-                        </>
+                        </div>
                     )}
                 </AnimatePresence>
 
-                {/* User Detail Modal */}
+                {/* User Detail Modal - Centered */}
                 <AnimatePresence>
                     {showUserModal && selectedUser && (
-                        <>
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                            {/* Backdrop */}
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
+                                className="absolute inset-0 bg-black/70 backdrop-blur-sm"
                                 onClick={() => setShowUserModal(false)}
                             />
+                            {/* Modal */}
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-50"
+                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                                className="relative bg-slate-800 rounded-2xl shadow-2xl p-6 max-w-md w-full border border-teal-500/20 max-h-[90vh] overflow-y-auto"
+                                onClick={(e) => e.stopPropagation()}
                             >
-                                <div className="bg-slate-800 rounded-2xl shadow-2xl p-6 border border-teal-500/20">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-teal-500/20">
-                                                {selectedUser.username.charAt(0).toUpperCase()}
-                                            </div>
-                                            <div>
-                                                <h3 className="text-xl font-bold text-white">{selectedUser.username}</h3>
-                                                <p className="text-slate-400 text-sm">{selectedUser.email}</p>
-                                            </div>
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-teal-500/20">
+                                            {selectedUser.username.charAt(0).toUpperCase()}
                                         </div>
-                                        <button onClick={() => setShowUserModal(false)} className="text-slate-400 hover:text-white transition-colors">
-                                            <XCircle className="w-5 h-5" />
-                                        </button>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4 mb-6">
-                                        <div className="bg-slate-700/30 rounded-lg p-3 text-center">
-                                            <p className="text-slate-400 text-xs">Role</p>
-                                            <div className="flex items-center justify-center gap-1 mt-1">
-                                                {selectedUser.role === 'admin' ? <Crown className="w-4 h-4 text-yellow-400" /> : <Users className="w-4 h-4 text-teal-400" />}
-                                                <span className="text-white font-medium capitalize">{selectedUser.role}</span>
-                                            </div>
-                                        </div>
-                                        <div className="bg-slate-700/30 rounded-lg p-3 text-center">
-                                            <p className="text-slate-400 text-xs">Status</p>
-                                            <div className="flex items-center justify-center gap-1 mt-1">
-                                                {getStatusIcon(selectedUser.status)}
-                                                <span className="text-white font-medium capitalize">{selectedUser.status}</span>
-                                            </div>
-                                        </div>
-                                        <div className="bg-slate-700/30 rounded-lg p-3 text-center">
-                                            <p className="text-slate-400 text-xs">Credits</p>
-                                            <p className="text-white font-bold">{selectedUser.credits.toLocaleString()}</p>
-                                        </div>
-                                        <div className="bg-slate-700/30 rounded-lg p-3 text-center">
-                                            <p className="text-slate-400 text-xs">Games Played</p>
-                                            <p className="text-white font-bold">{selectedUser.gamesPlayed}</p>
-                                            <p className="text-slate-500 text-xs">Wins: {selectedUser.wins}</p>
-                                        </div>
-                                        <div className="bg-slate-700/30 rounded-lg p-3 text-center col-span-2">
-                                            <p className="text-slate-400 text-xs">Joined</p>
-                                            <p className="text-white font-medium">{selectedUser.joined}</p>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-white">{selectedUser.username}</h3>
+                                            <p className="text-slate-400 text-sm">{selectedUser.email}</p>
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => setShowUserModal(false)}
-                                        className="w-full py-2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg font-semibold hover:scale-105 transition-all duration-300 shadow-lg shadow-teal-500/25"
+                                        className="text-slate-400 hover:text-white transition-colors p-1 hover:bg-slate-700/50 rounded-lg"
                                     >
-                                        Close
+                                        <XCircle className="w-6 h-6" />
                                     </button>
                                 </div>
+                                <div className="grid grid-cols-2 gap-3 mb-6">
+                                    <div className="bg-slate-700/30 rounded-lg p-3 text-center">
+                                        <p className="text-slate-400 text-xs">Role</p>
+                                        <div className="flex items-center justify-center gap-1 mt-1">
+                                            {selectedUser.role === 'admin' ? <Crown className="w-4 h-4 text-yellow-400" /> : <Users className="w-4 h-4 text-teal-400" />}
+                                            <span className="text-white font-medium capitalize">{selectedUser.role}</span>
+                                        </div>
+                                    </div>
+                                    <div className="bg-slate-700/30 rounded-lg p-3 text-center">
+                                        <p className="text-slate-400 text-xs">Status</p>
+                                        <div className="flex items-center justify-center gap-1 mt-1">
+                                            {getStatusIcon(selectedUser.status)}
+                                            <span className="text-white font-medium capitalize">{selectedUser.status}</span>
+                                        </div>
+                                    </div>
+                                    <div className="bg-slate-700/30 rounded-lg p-3 text-center">
+                                        <p className="text-slate-400 text-xs">Credits</p>
+                                        <p className="text-white font-bold">{selectedUser.credits.toLocaleString()}</p>
+                                    </div>
+                                    <div className="bg-slate-700/30 rounded-lg p-3 text-center">
+                                        <p className="text-slate-400 text-xs">Games Played</p>
+                                        <p className="text-white font-bold">{selectedUser.gamesPlayed}</p>
+                                        <p className="text-slate-500 text-xs">Wins: {selectedUser.wins}</p>
+                                    </div>
+                                    <div className="bg-slate-700/30 rounded-lg p-3 text-center col-span-2">
+                                        <p className="text-slate-400 text-xs">Joined</p>
+                                        <p className="text-white font-medium">{selectedUser.joined}</p>
+                                    </div>
+                                    {selectedUser.phone && (
+                                        <div className="bg-slate-700/30 rounded-lg p-3 text-center col-span-2">
+                                            <p className="text-slate-400 text-xs">Phone</p>
+                                            <p className="text-white font-medium">{selectedUser.phone}</p>
+                                        </div>
+                                    )}
+                                    <div className="bg-slate-700/30 rounded-lg p-3 text-center col-span-2">
+                                        <p className="text-slate-400 text-xs">Last Active</p>
+                                        <p className="text-white font-medium">{selectedUser.lastActive}</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setShowUserModal(false)}
+                                    className="w-full py-2.5 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg font-semibold hover:scale-105 transition-all duration-300 shadow-lg shadow-teal-500/25"
+                                >
+                                    Close
+                                </button>
                             </motion.div>
-                        </>
+                        </div>
                     )}
                 </AnimatePresence>
             </div>
